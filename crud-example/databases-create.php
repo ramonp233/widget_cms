@@ -6,16 +6,8 @@
  * Time: 11:49
  */
 
+require('components/config.php');
 
-$dbhost = "localhost";
-$dbuser = "widget_cms";
-$dbpass = "password1";
-$dbname = "widget_corp";
-
-$connection = mysqli_connect($dbhost, $dbuser, $dbpass, $dbname);
-if (mysqli_connect_errno()) {
-    die("Database connection failed: " . mysqli_connect_error() . " (" . mysqli_connect_errno() . ").");
-}
 if (isset($_POST['submit'])) {
 $menu_name = $_POST['menu_name'];
 $position = $_POST['position'];
@@ -31,6 +23,9 @@ $result = mysqli_query($connection, $query);
 <html lang="en">
   <head>
       <meta charset="UTF-8">
+      <?php if (isset($_POST['submit'])) { ?>
+          <meta http-equiv="refresh" content="2; url=index.php/">
+      <?php  } ?>
       <title>Document</title>
       <style>
           .form-field {
@@ -42,9 +37,6 @@ $result = mysqli_query($connection, $query);
       </style>
   </head>
 <body>
-    <pre>
-      <?php print_r($_POST);?>
-    </pre>
     <a href="databases-read.php">Vaata tabelit</a>
     <?php
         if (isset($_POST['submit'])){
@@ -55,6 +47,7 @@ $result = mysqli_query($connection, $query);
             }
         }
     ?>
+        <?php if (!isset($_POST['submit'])) { ?>
         <form action="databases-create.php" method="post">
               <div class="form-field">
                     <label for="menu_name" class="form-label">Pealkiri</label>
@@ -79,6 +72,8 @@ $result = mysqli_query($connection, $query);
                     <input name="submit" type="submit">
               </div>
     </form>
+            <a href="index.php">Mine tagasi</a>
+        <?php } ?>
 </body>
 </html>
 <?php mysqli_close($connection);?>

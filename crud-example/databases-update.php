@@ -7,35 +7,30 @@
  */
 
 
-$dbhost = "localhost";
-$dbuser = "widget_cms";
-$dbpass = "password1";
-$dbname = "widget_corp";
-
-$connection = mysqli_connect($dbhost, $dbuser, $dbpass, $dbname);
-
-if (mysqli_connect_errno()) {
-    die("Database connection failed: " . mysqli_connect_error() . " (" . mysqli_connect_errno() . ").");
+if (!isset($_GET['id'])) {
+    header('location: index.php');
 }
-
-$id = $_GET['id'];
-
-if (isset($_POST['submit'])) {
-    $menu_name = $_POST['menu_name'];
-    $position = $_POST['position'];
-    $visible = $_POST['visible'];
-    $query = "UPDATE subjects SET
-        menu_name = '{$menu_name}',
-        position = {$position},
-        visible = {$visible}
-        WHERE id = {$id}";
-    $result = mysqli_query($connection, $query);
-}
+  require('Components/config.php');
+  $id = $_GET['id'];
+  if (isset($_POST['submit'])) {
+      $menu_name = $_POST['menu_name'];
+      $position = $_POST['position'];
+      $visible = $_POST['visible'];
+      $query = "UPDATE subjects SET
+            menu_name = '{$menu_name}',
+            position = {$position},
+            visible = {$visible}
+            WHERE id = {$id}";
+      $result = mysqli_query($connection, $query);
+  }
 ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <?php if (isset($_POST['submit'])) { ?>
+        <meta http-equiv="refresh" content="2; url=index.php/">
+    <?php  } ?>
     <title>Document</title>
     <style>
         .form-field {
@@ -47,20 +42,16 @@ if (isset($_POST['submit'])) {
     </style>
 </head>
 <body>
-    <pre>
-      <?php print_r($_POST);?>
-    </pre>
-    <a href="databases-read.php">Vaata tabelit</a>
-    <?php
-     if (isset($_POST['submit'])){
-            if ($result) {
-                echo "Õnnestus";
-            } else {
-                echo "Ebaõnnestus";
-            }
-         echo $query;
-     }
-    ?>
+<?php
+if (isset($_POST['submit'])){
+    if ($result) {
+        echo "Õnnestus";
+    } else {
+        echo "Ebaõnnestus";
+    }
+}
+?>
+<?php if (!isset($_POST['submit'])) { ?>
     <form action="databases-update.php?id=<?php echo $id; ?>" method="post">
         <div class="form-field">
             <label for="menu_name" class="form-label">Pealkiri</label>
@@ -85,6 +76,9 @@ if (isset($_POST['submit'])) {
             <input name="submit" type="submit">
         </div>
     </form>
+    <a href="index.php">Mine tagasi</a>
+<?php } ?>
+
 </body>
 </html>
 
