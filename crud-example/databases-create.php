@@ -17,7 +17,7 @@ if (mysqli_connect_errno()) {
     die("Database connection failed: " . mysqli_connect_error() . " (" . mysqli_connect_errno() . ").");
 }
 
-$query = "SELECT * FROM pages where subject_id = 2;";
+$query = "SELECT * FROM pages;";
 $result = mysqli_query($connection, $query);
 
 
@@ -33,25 +33,15 @@ $result = mysqli_query($connection, $query);
 </head>
 <body>
             <?php
-                 while ($row = mysqli_fetch_assoc($result)) {
+                 while ($subject = mysqli_fetch_assoc($result)) {
                      ?>
-
-                <article class="page">
-                  <header class="page-header">
-                    <h1 class="page-title">
-                        <?php
-                            echo $row['menu_name'];
-                        ?>
-                    </h1>
-                  </header>
-                  <div class="page-body">
-                      <?php
-                        echo $row['content'];
-                      ?>
-                   </div>
-                </article>
-
-
+                        <ul>
+                            <?php
+                                echo "<li>";
+                                echo $subject['menu_name'];
+                                echo "</li>";
+                            ?>
+                        </ul>
              <?php
                 }
             ?>
